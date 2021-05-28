@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:movie/pages/sharedpage/nav.dart';
 import 'package:movie/pages/sharedpage/sidebar.dart';
 import 'package:video_player/video_player.dart';
+
+import 'DepHome/video.dart';
 class ViewFilm extends StatefulWidget {
 
   String fimnName;
@@ -12,23 +14,8 @@ class ViewFilm extends StatefulWidget {
 }
 
 class _ViewFilmState extends State<ViewFilm> {
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
-  @override
-  void initState() {
-    _controller = VideoPlayerController.network(
-        "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4");
-    //_controller = VideoPlayerController.asset("videos/sample_video.mp4");
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(true);
-    _controller.setVolume(1.0);
-    super.initState();
-  }
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+
+
   @override
   Widget build(BuildContext context) {
      return Scaffold(
@@ -43,26 +30,11 @@ class _ViewFilmState extends State<ViewFilm> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Center(child: TitleRow(widget.fimnName)),
           Container(
-            child:  FutureBuilder(
-              future: _initializeVideoPlayerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Center(
-                    child: AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-          )
+              width: MediaQuery.of(context).size.width,
+              height: 400,
+              child: Video()),
+          Center(child: TitleRow(widget.fimnName)),
 
 
 
@@ -70,19 +42,6 @@ class _ViewFilmState extends State<ViewFilm> {
 
         ],
       ),
-       floatingActionButton: FloatingActionButton(
-         onPressed: () {
-           setState(() {
-             if (_controller.value.isPlaying) {
-               _controller.pause();
-             } else {
-               _controller.play();
-             }
-           });
-         },
-         child:
-         Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
-       ),
 
      );
   }

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'package:movie/data/sw_constants.dart';
 import 'package:subtitle_wrapper_package/subtitle_controller.dart';
 import 'package:chewie/chewie.dart';
-import 'package:flutter/material.dart';
-import 'package:subtitle_wrapper_package/subtitle_controller.dart';
+
 import 'package:subtitle_wrapper_package/subtitle_wrapper_package.dart';
 import 'package:subtitle_wrapper_package/data/models/style/subtitle_style.dart';
 import 'package:video_player/video_player.dart';
-
-class TestV extends StatefulWidget {
-  const TestV({Key key}) : super(key: key);
+class Video extends StatefulWidget {
+  const Video({Key key}) : super(key: key);
 
   @override
-  _TestVState createState() => _TestVState();
+  _VideoState createState() => _VideoState();
 }
 
-class _TestVState extends State<TestV> {
+class _VideoState extends State<Video> {
   final String link = SwConstants.videoUrl;
   final SubtitleController subtitleController = SubtitleController(
     subtitleUrl: SwConstants.enSubtitle,
@@ -75,7 +74,7 @@ class _TestVState extends State<TestV> {
               height: 270,
               child: SubTitleWrapper(
                 videoPlayerController:
-                    localChewieController.videoPlayerController,
+                localChewieController.videoPlayerController,
                 subtitleController: subtitleController,
                 subtitleStyle: const SubtitleStyle(
                   textColor: Colors.white,
@@ -102,41 +101,10 @@ class _TestVState extends State<TestV> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Flutter subtitle wrapper package',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              color: Colors.white.withOpacity(
-                                0.8,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 18.0,
-                            ),
-                            child: Text(
-                              'This package can display SRT and WebVtt subtitles. With a lot of customizable options and dynamic updating support.',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.white.withOpacity(
-                                  0.8,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'Options.',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.white.withOpacity(
-                                0.8,
-                              ),
-                            ),
-                          ),
-                          const Divider(
-                            color: Colors.grey,
-                          ),
+
+
+
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
