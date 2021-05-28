@@ -31,6 +31,7 @@ dependencies:
   carousel_slider:
   chewie:
   video_player:
+  subtitle_wrapper_package:
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie/pages/DepHome/cardfield.dart';
+import 'package:movie/pages/test.dart';
 import 'package:movie/pages/viewfilm.dart';
 class HListView extends StatelessWidget {
   HListView(this.numbers,this.namegroup);
@@ -36,11 +37,16 @@ class HListView extends StatelessWidget {
           ),
           color: Colors.black54,
           onPressed: () {
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) =>
+            //             ViewFilm(numbers[index])));
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ViewFilm(numbers[index])));
+                        TestV()));
           },
          );
 
