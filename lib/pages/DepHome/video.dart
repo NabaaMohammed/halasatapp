@@ -31,7 +31,7 @@ class _VideoState extends State<Video> {
       aspectRatio: 3 / 2,
       autoPlay: true,
       autoInitialize: true,
-      allowFullScreen: false,
+      allowFullScreen: true,
     );
   }
 
@@ -63,14 +63,10 @@ class _VideoState extends State<Video> {
     final localChewieController = chewieController;
 
     return Scaffold(
-      backgroundColor: const Color(0xff0b090a),
+      backgroundColor: Colors.black54,
       body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-            ),
-            child: SizedBox(
+          SizedBox(
               height: 270,
               child: SubTitleWrapper(
                 videoPlayerController:
@@ -80,12 +76,13 @@ class _VideoState extends State<Video> {
                   textColor: Colors.white,
                   hasBorder: true,
                 ),
+
                 videoChild: Chewie(
                   controller: localChewieController,
                 ),
               ),
             ),
-          ),
+
           Expanded(
             child: Container(
               color: const Color(
@@ -177,7 +174,15 @@ class _VideoState extends State<Video> {
           ),
         ],
       ),
+      floatingActionButton: TextButton(
+        // backgroundColor:Colors.black45,
+        onPressed: () { },
+        child:Text(':',style: TextStyle(color: Colors.grey,fontSize: 50,fontWeight:FontWeight.bold, ),),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
+
+
   }
 
   @override
