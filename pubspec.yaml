@@ -32,6 +32,11 @@ dependencies:
   chewie:
   video_player:
   subtitle_wrapper_package:
+  flutter_downloader:
+  dio:
+  path_provider:
+  image_gallery_saver:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:

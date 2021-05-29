@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie/pages/test.dart';
 
 class Sidebar extends StatefulWidget {
   @override
@@ -10,11 +11,13 @@ class _SidebarState extends State<Sidebar> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(' sidebar'),
-
-            Image ( image: AssetImage(
-                  'assets/img/f5.jpg'),
-              fit: BoxFit.cover,)
+        TextButton(onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      TestV()));
+        }, child: Text('test'))
 
       ],
     );

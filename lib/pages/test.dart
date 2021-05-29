@@ -1,13 +1,9 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:movie/data/sw_constants.dart';
-import 'package:subtitle_wrapper_package/subtitle_controller.dart';
-import 'package:chewie/chewie.dart';
-import 'package:flutter/material.dart';
-import 'package:subtitle_wrapper_package/subtitle_controller.dart';
-import 'package:subtitle_wrapper_package/subtitle_wrapper_package.dart';
-import 'package:subtitle_wrapper_package/data/models/style/subtitle_style.dart';
-import 'package:video_player/video_player.dart';
-
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 class TestV extends StatefulWidget {
   const TestV({Key key}) : super(key: key);
 
@@ -16,214 +12,118 @@ class TestV extends StatefulWidget {
 }
 
 class _TestVState extends State<TestV> {
-  final String link = SwConstants.videoUrl;
-  final SubtitleController subtitleController = SubtitleController(
-    subtitleUrl: SwConstants.enSubtitle,
-    subtitleDecoder: SubtitleDecoder.utf8,
-  );
+  final Dio dio = Dio();
+  bool loading = false;
+  double progress = 0;
 
-  VideoPlayerController get videoPlayerController {
-    return VideoPlayerController.network(link);
+  Future<bool> saveVideo(String url, String fileName) async {
+    Directory directory;
+    try {
+      if (Platform.isAndroid) {
+        if (await _requestPermission(Permission.storage)) {
+          directory = await getExternalStorageDirectory();
+          String newPath = "";
+          print(directory);
+          List<String> paths = directory.path.split("/");
+          for (int x = 1; x < paths.length; x++) {
+            String folder = paths[x];
+            if (folder != "Android") {
+              newPath += "/" + folder;
+            } else {
+              break;
+            }
+          }
+          newPath = newPath + "/Movies";
+          directory = Directory(newPath);
+        } else {
+          return false;
+        }
+      } else {
+        if (await _requestPermission(Permission.photos)) {
+          directory = await getTemporaryDirectory();
+        } else {
+          return false;
+        }
+      }
+      File saveFile = File(directory.path + "/$fileName");
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+      if (await directory.exists()) {
+        await dio.download(url, saveFile.path,
+            onReceiveProgress: (value1, value2) {
+              setState(() {
+                progress = value1 / value2;
+              });
+            });
+        if (Platform.isIOS) {
+          await ImageGallerySaver.saveFile(saveFile.path,
+              isReturnPathOfIOS: true);
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
-  ChewieController get chewieController {
-    return ChewieController(
-      videoPlayerController: videoPlayerController,
-      aspectRatio: 3 / 2,
-      autoPlay: true,
-      autoInitialize: true,
-      allowFullScreen: false,
-    );
+  Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  void updateSubtitleUrl({
-    ExampleSubtitleLanguage subtitleLanguage,
-  }) {
-    String subtitleUrl;
-    switch (subtitleLanguage) {
-      case ExampleSubtitleLanguage.english:
-        subtitleUrl = SwConstants.enSubtitle;
-        break;
-      case ExampleSubtitleLanguage.spanish:
-        subtitleUrl = SwConstants.esSubtitle;
-        break;
-      case ExampleSubtitleLanguage.dutch:
-        subtitleUrl = SwConstants.nlSubtitle;
-        break;
-      default:
+  downloadFile() async {
+    setState(() {
+      loading = true;
+      progress = 0;
+    });
+    bool downloaded = await saveVideo(
+        "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
+        "video.mp4");
+    if (downloaded) {
+      print("File Downloaded");
+    } else {
+      print("Problem Downloading File");
     }
-    if (subtitleUrl != null) {
-      subtitleController.updateSubtitleUrl(
-        url: subtitleUrl,
-      );
-    }
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final localChewieController = chewieController;
-
     return Scaffold(
-      backgroundColor: const Color(0xff0b090a),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-            ),
-            child: SizedBox(
-              height: 270,
-              child: SubTitleWrapper(
-                videoPlayerController:
-                    localChewieController.videoPlayerController,
-                subtitleController: subtitleController,
-                subtitleStyle: const SubtitleStyle(
-                  textColor: Colors.white,
-                  hasBorder: true,
-                ),
-                videoChild: Chewie(
-                  controller: localChewieController,
-                ),
-              ),
-            ),
+      body: Center(
+        child: loading
+            ? Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: LinearProgressIndicator(
+            minHeight: 10,
+            value: progress,
           ),
-          Expanded(
-            child: Container(
-              color: const Color(
-                0xff161a1d,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(
-                        16.0,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Flutter subtitle wrapper package',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              color: Colors.white.withOpacity(
-                                0.8,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 18.0,
-                            ),
-                            child: Text(
-                              'This package can display SRT and WebVtt subtitles. With a lot of customizable options and dynamic updating support.',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.white.withOpacity(
-                                  0.8,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'Options.',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.white.withOpacity(
-                                0.8,
-                              ),
-                            ),
-                          ),
-                          const Divider(
-                            color: Colors.grey,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation:
-                                  MaterialStateProperty.all<double>(8.0),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () => updateSubtitleUrl(
-                                  subtitleLanguage:
-                                  ExampleSubtitleLanguage.english,
-                                ),
-                                child: const Text('Switch to 🇬🇧'),
-                              ),
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation:
-                                  MaterialStateProperty.all<double>(8.0),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () => updateSubtitleUrl(
-                                  subtitleLanguage:
-                                  ExampleSubtitleLanguage.spanish,
-                                ),
-                                child: const Text('Switch to 🇪🇸'),
-                              ),
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation:
-                                  MaterialStateProperty.all<double>(8.0),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () => updateSubtitleUrl(
-                                  subtitleLanguage:
-                                  ExampleSubtitleLanguage.dutch,
-                                ),
-                                child: const Text('Switch to 🇳🇱'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+        )
+            : FlatButton.icon(
+            icon: Icon(
+              Icons.download_rounded,
+              color: Colors.white,
             ),
-          ),
-        ],
+            color: Colors.blue,
+            onPressed: downloadFile,
+            padding: const EdgeInsets.all(10),
+            label: Text(
+              "Download Video",
+              style: TextStyle(color: Colors.white, fontSize: 25),
+            )),
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    if (videoPlayerController != null && chewieController != null) {
-      videoPlayerController?.dispose();
-      chewieController?.dispose();
-    }
-  }
-}
-
-enum ExampleSubtitleLanguage {
-  english,
-  spanish,
-  dutch,
 }
