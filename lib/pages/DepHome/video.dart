@@ -63,11 +63,7 @@ class _VideoState extends State<Video> {
     final localChewieController = chewieController;
     int _value = 1;
     return Scaffold(
-      backgroundColor: Colors.black54,
-      body: Column(
-        children: [
-
-          SizedBox(
+      body: SizedBox(
               height: 270,
               child: SubTitleWrapper(
                 videoPlayerController:
@@ -84,136 +80,34 @@ class _VideoState extends State<Video> {
               ),
             ),
 
-          Expanded(
-            child: Container(
-              color: const Color(
-                0xff161a1d,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(
-                        16.0,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
 
-
-
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation:
-                                  MaterialStateProperty.all<double>(8.0),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () => updateSubtitleUrl(
-                                  subtitleLanguage:
-                                  ExampleSubtitleLanguage.english,
-                                ),
-                                child: const Text('Switch to 🇬🇧'),
-                              ),
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation:
-                                  MaterialStateProperty.all<double>(8.0),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () => updateSubtitleUrl(
-                                  subtitleLanguage:
-                                  ExampleSubtitleLanguage.spanish,
-                                ),
-                                child: const Text('Switch to 🇪🇸'),
-                              ),
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation:
-                                  MaterialStateProperty.all<double>(8.0),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () => updateSubtitleUrl(
-                                  subtitleLanguage:
-                                  ExampleSubtitleLanguage.dutch,
-                                ),
-                                child: const Text('Switch to 🇳🇱'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+      floatingActionButton: PopupMenuButton(
+        // value: _value,
+          icon: Icon(Icons.language),
+        // onSelected: choiceAction,
+       itemBuilder: (BuildContext context) {
+    return Constants.choices.map((String choice) {
+    return PopupMenuItem<String>(
+    value: choice,
+    child:   ElevatedButton(
+      style: ButtonStyle(
+        elevation:
+        MaterialStateProperty.all<double>(8.0),
+        shape: MaterialStateProperty.all<
+            RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              8.0,
             ),
           ),
-        ],
+        ),
       ),
-      floatingActionButton: DropdownButton(
-        value: _value,
-        items: [
-          DropdownMenuItem(
-            child: Text("First Item"),
-            value: 1,
-          ),
-          DropdownMenuItem(
-            child: Text("Second Item"),
-            value: 2,
-          )
-        ],
-
-        onChanged: (int value) {
-          setState(() {
-            _value = value;
-          });
-        },
-      ),
-      //   // backgroundColor:Colors.black45,
-      //   onPressed: () { },
-      //   child:DropdownButton(
-      //       value: _value,
-      //       items: [
-      //         DropdownMenuItem(
-      //           child: Text("First Item"),
-      //           value: 1,
-      //         ),
-      //         DropdownMenuItem(
-      //           child: Text("Second Item"),
-      //           value: 2,
-      //         )
-      //       ],
-      //
-      //
-      //       hint:Text("Select item")
-      //   ),
-      //   // Text(':',style: TextStyle(color: Colors.grey,fontSize: 50,fontWeight:FontWeight.bold, ),),
-      // ),
+      onPressed:() => choiceAction(choice),
+      child:  Text(choice),
+    ),
+    );
+    }).toList();
+    },),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
 
@@ -228,6 +122,32 @@ class _VideoState extends State<Video> {
       chewieController?.dispose();
     }
   }
+  void choiceAction(String choice) {
+    if(choice==Constants.english){
+      updateSubtitleUrl(
+          subtitleLanguage:
+          ExampleSubtitleLanguage.english);
+      print('I First Item');
+    }
+    else if(choice==Constants.dutch){
+      updateSubtitleUrl(
+          subtitleLanguage:
+          ExampleSubtitleLanguage.dutch);
+      print('I Second Item');
+    }
+    else if(choice==Constants.spanish){
+      updateSubtitleUrl(
+          subtitleLanguage:
+          ExampleSubtitleLanguage.spanish);
+      print('I Third Item');
+    }
+    else {
+      updateSubtitleUrl(
+          subtitleLanguage:
+          ExampleSubtitleLanguage.english);
+    }
+
+  }
 }
 
 enum ExampleSubtitleLanguage {
@@ -235,3 +155,15 @@ enum ExampleSubtitleLanguage {
   spanish,
   dutch,
 }
+class Constants {
+  static const String english = 'english';
+  static const String spanish = '  spanish';
+  static const String dutch = '  dutch';
+
+  static const List<String> choices = <String>[
+    english,
+    spanish,
+    dutch,
+  ];
+}
+
