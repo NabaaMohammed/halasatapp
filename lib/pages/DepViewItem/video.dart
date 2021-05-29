@@ -62,8 +62,7 @@ class _VideoState extends State<Video> {
   @override
   Widget build(BuildContext context) {
     final localChewieController = chewieController;
-    int _value = 1;
-    return Scaffold(
+     return Scaffold(
       body: SizedBox(
               height: 270,
               child: SubTitleWrapper(
