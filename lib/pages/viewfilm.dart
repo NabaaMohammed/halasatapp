@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie/pages/DepHome/download.dart';
  import 'package:movie/pages/DepHome/titleRow.dart';
 import 'package:movie/pages/sharedpage/nav.dart';
 import 'package:movie/pages/sharedpage/sidebar.dart';
@@ -34,6 +35,7 @@ class _ViewFilmState extends State<ViewFilm> {
               width: MediaQuery.of(context).size.width,
               height: 400,
               child: Video()),
+          Download(),
           Center(child: TitleRow(widget.fimnName)),
 
 
