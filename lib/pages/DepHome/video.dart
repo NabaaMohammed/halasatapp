@@ -61,11 +61,12 @@ class _VideoState extends State<Video> {
   @override
   Widget build(BuildContext context) {
     final localChewieController = chewieController;
-
+    int _value = 1;
     return Scaffold(
       backgroundColor: Colors.black54,
       body: Column(
         children: [
+
           SizedBox(
               height: 270,
               child: SubTitleWrapper(
@@ -174,11 +175,45 @@ class _VideoState extends State<Video> {
           ),
         ],
       ),
-      floatingActionButton: TextButton(
-        // backgroundColor:Colors.black45,
-        onPressed: () { },
-        child:Text(':',style: TextStyle(color: Colors.grey,fontSize: 50,fontWeight:FontWeight.bold, ),),
+      floatingActionButton: DropdownButton(
+        value: _value,
+        items: [
+          DropdownMenuItem(
+            child: Text("First Item"),
+            value: 1,
+          ),
+          DropdownMenuItem(
+            child: Text("Second Item"),
+            value: 2,
+          )
+        ],
+
+        onChanged: (int value) {
+          setState(() {
+            _value = value;
+          });
+        },
       ),
+      //   // backgroundColor:Colors.black45,
+      //   onPressed: () { },
+      //   child:DropdownButton(
+      //       value: _value,
+      //       items: [
+      //         DropdownMenuItem(
+      //           child: Text("First Item"),
+      //           value: 1,
+      //         ),
+      //         DropdownMenuItem(
+      //           child: Text("Second Item"),
+      //           value: 2,
+      //         )
+      //       ],
+      //
+      //
+      //       hint:Text("Select item")
+      //   ),
+      //   // Text(':',style: TextStyle(color: Colors.grey,fontSize: 50,fontWeight:FontWeight.bold, ),),
+      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
 
