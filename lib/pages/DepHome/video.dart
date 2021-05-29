@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:movie/data/sw_constants.dart';
 import 'package:subtitle_wrapper_package/subtitle_controller.dart';
@@ -89,21 +90,9 @@ class _VideoState extends State<Video> {
     return Constants.choices.map((String choice) {
     return PopupMenuItem<String>(
     value: choice,
-    child:   ElevatedButton(
-      style: ButtonStyle(
-        elevation:
-        MaterialStateProperty.all<double>(8.0),
-        shape: MaterialStateProperty.all<
-            RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              8.0,
-            ),
-          ),
-        ),
-      ),
+    child:   TextButton(
       onPressed:() => choiceAction(choice),
-      child:  Text(choice),
+      child:  Text(choice,style: TextStyle(color: Colors.white,),textAlign: TextAlign.center,),
     ),
     );
     }).toList();

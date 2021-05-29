@@ -1,6 +1,6 @@
 mixin SwConstants {
    static const String videoUrl =
-       'https://d11b76aq44vj33.cloudfront.net/media/720/video/5def7824adbbc.mp4';
+       'https://assets.mixkit.co/videos/preview/mixkit-group-of-friends-partying-happily-4640-large.mp4';
 
   // static const String videoUrl =
   //     'assets/video/upc-video-subtitles-en.vtt';
